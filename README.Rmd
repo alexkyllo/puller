@@ -19,11 +19,24 @@ knitr::opts_chunk$set(
 [![Lifecycle Status](https://img.shields.io/badge/lifecycle-experimental-yellow.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 <!-- badges: end -->
 
-(WIP) A package to help data scientists get data from Azure reproducibly.
+(WIP) puller is a package to provide a high-level interface for data scientists
+to get data from Azure reproducibly.
+
+The basic workflow is: write a query on a database, run it and export the
+results to Blob Storage, download a copy to your machine and run the rest of
+your R script against it, while using Azure Key Vault to authenticate to Azure
+without having to store secret keys.
+
+With this workflow you can run your script on
+multiple machines without having to rerun the query on the source database
+because the results you want are cached in Blob storage.
+If the source data upstream changes or gets deleted, you can still
+reproduce your analysis because you have the dataset.
 
 ## Installation
 
-You can install the development version of puller from [GitHub](https://github.com/) with:
+You can install the development version of puller from
+[GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
