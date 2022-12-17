@@ -1,0 +1,20 @@
+Package: puller
+Title: Get data from Azure reproducibly
+Version: 0.0.0.9000
+Authors@R: 
+    person("Alex", "Kyllo", , "alex.kyllo@gmail.com", role = c("aut", "cre"))
+Description: Utility functions for getting datasets from Azure databases and storage for analysis.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.1
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Imports: 
+    AzureKeyVault,
+    AzureKusto,
+    AzureStor,
+    jsonlite,
+    lifecycle,
+    whisker
