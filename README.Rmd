@@ -20,7 +20,9 @@ knitr::opts_chunk$set(
 <!-- badges: end -->
 
 (WIP) puller is a package to provide a high-level interface for data scientists
-to get data from Azure reproducibly.
+to get data from Azure for reproducible data analysis work. It implements an
+opinionated workflow to minimize the amount of time you need to spend
+configuring cloud resources, so that you can focus on your analysis.
 
 The basic workflow is: write a query on a database, run it and export the
 results to Blob Storage, download a copy to your machine and run the rest of
@@ -32,6 +34,13 @@ multiple machines without having to rerun the query on the source database
 because the results you want are cached in Blob storage.
 If the source data upstream changes or gets deleted, you can still
 reproduce your analysis because you have the dataset.
+
+## Features 
+
+- [x] Log into Azure via the CLI
+- [ ] Export data to Azure Blob Storage from a Kusto query
+- [ ] Export data to Azure Blob Storage from an Azure SQL database
+- [ ] 
 
 ## Installation
 

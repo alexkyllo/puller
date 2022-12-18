@@ -29,6 +29,11 @@ get_cli_token <- function(resource) {
     access_token <- jsonlite::parse_json(system(scope_command, intern = TRUE))
     return(access_token)
 }
+# TODO: fix
+# ERROR: User '' does not exist in MSAL token cache. Run `az login`.
+# Error: lexical error: invalid char in json text.
+#                                        NA
+#                      (right here) ------^
 
 #' Build the Azure CLI command to get an access token
 #' @param command default "az"
@@ -95,9 +100,11 @@ execute_cmd <- function(cmd) {
 #' @param query The text of the Kusto query to run
 #' @param name_prefix The filename prefix for each exported file
 #' @param storage_uri The URI of the blob storage container to export to
-#' @param key The account key for the storage container
+#' @param key The account key for the storage container. Default "impersonate"
+#' uses the identity that is signed into Kusto to authenticate to Azure Storage.
 #' @export
-kusto_export_cmd <- function(query, name_prefix, storage_uri, key) {
+kusto_export_cmd <- function(query, name_prefix, storage_uri,
+                             key = "impersonate") {
     template <- ".export
 compressed
 to parquet (h@'{{ storage_uri }}/{{ name_prefix }};{{ key }}')
@@ -119,4 +126,3 @@ distributed=false
     )
     whisker::whisker.render(template, args)
 }
-# TODO: test this without key auth, using AAD token and impersonate
