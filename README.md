@@ -30,6 +30,8 @@ dataset.
 
   - [x] Log into Azure via the CLI
   - [ ] Export data to Azure Blob Storage from a Kusto query
+  - [ ] Export data to Azure Blob Storage from a SQL query via Kusto
+    using `sql_request()`
   - [ ] Export data to Azure Blob Storage from an Azure SQL database
     (will require C/C++ code to put access token into connection
     arguments because rodbc/nanodbc doesn’t support this)
