@@ -4,7 +4,7 @@
 \alias{az_login}
 \title{Log into the Azure CLI by running the \verb{az login} command.}
 \usage{
-az_login()
+az_login(tenant, use_device_code = FALSE)
 }
 \description{
 Log into the Azure CLI by running the \verb{az login} command.

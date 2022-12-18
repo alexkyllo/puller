@@ -2,4 +2,5 @@
 
 export(az_login)
 export(get_cli_token)
+export(kusto_export_cmd)
 importFrom(lifecycle,deprecated)

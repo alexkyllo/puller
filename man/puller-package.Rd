@@ -4,7 +4,7 @@
 \name{puller-package}
 \alias{puller}
 \alias{puller-package}
-\title{puller: Get data from Azure reproducibly.}
+\title{puller: Get data from Azure reproducibly}
 \description{
 Utility functions for getting datasets from Azure databases and storage for analysis.
 }

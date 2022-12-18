@@ -1,8 +1,10 @@
 #' Log into the Azure CLI by running the `az login` command.
 #' @export
-az_login <- function() {
-    message("az login\n")
-    system2("az", "login", stdout = TRUE)
+az_login <- function(tenant, use_device_code = FALSE) {
+    args <- c("login")
+    if (!missing(tenant)) args <- c(args, paste("--tenant", tenant))
+    if (use_device_code) args <- c(args, "--use-device-code")
+    execute_cmd(list(command = "az", args = args))
 }
 
 #' Get an access token using the Azure CLI
@@ -28,15 +30,74 @@ get_cli_token <- function(resource) {
     return(access_token)
 }
 
+#' Build the Azure CLI command to get an access token
+#' @param command default "az"
+#' @param resource The URI of the Azure resource to which to authenticate.
+#' @param tenant The Azure tenant ID to authenticate to.
+build_az_token_cmd <- function(command = "az", resource, tenant) {
+    args <- c("account", "get-access-token", "--output json")
+    if (!missing(resource)) args <- c(args, paste("--resource", resource))
+    if (!missing(tenant)) args <- c(args, paste("--tenant", tenant))
+    list(command = command, args = args)
+}
+
+#' Handling for error messages returned by the Azure CLI
+#' @param cond the error message string
+handle_az_cmd_errors <- function(cond) {
+    not_loggedin <- grepl("az login", cond, fixed = TRUE) |
+        grepl("az account set", cond, fixed = TRUE)
+    not_found <- grepl("not found", cond, fixed = TRUE)
+    error_in <- grepl("error in running", cond, fixed = TRUE)
+
+    if (not_found | error_in) {
+        msg <- paste(
+            "az is not installed or not in PATH.\n",
+            "Please see: ",
+            "https://learn.microsoft.com/en-us/cli/azure/install-azure-cli\n",
+            "for installation instructions."
+        )
+        stop(msg)
+    } else if (not_loggedin) {
+        stop("You are not logged into the Azure CLI.
+        Please call AzureAuth::az_login()
+        or run 'az login' from your shell and try again.")
+    } else {
+        # Other misc errors, pass through the CLI error message
+        message("Failed to invoke the Azure CLI.")
+        stop(cond)
+    }
+}
+
+#' Execute a command to the Azure CLI with arguments and handle error cases.
+#' @param cmd A list with the command in $command and a vector of arguments in
+#' $args.
+execute_cmd <- function(cmd) {
+    tryCatch(
+        {
+            message(cmd$command, " ", paste(cmd$args, collapse = " "), "\n")
+            result <- do.call(system2, append(cmd, list(stdout = TRUE)))
+            # result is a multi-line JSON string, concatenate together
+            paste0(result)
+        },
+        warning = function() {
+            # if an error case, catch it, pass the error string and handle it
+            handle_az_cmd_errors(result)
+        },
+        error = function(cond) {
+            handle_az_cmd_errors(cond$message)
+        }
+    )
+}
+
 #' Run a Kusto query and export results to Azure Storage in Parquet or CSV
 #' format.
-#' 
+#'
 #' @param query The text of the Kusto query to run
 #' @param name_prefix The filename prefix for each exported file
 #' @param storage_uri The URI of the blob storage container to export to
 #' @param key The account key for the storage container
 #' @export
-export_kusto_query <- function(query, name_prefix, storage_uri, key) {
+kusto_export_cmd <- function(query, name_prefix, storage_uri, key) {
     template <- ".export
 compressed
 to parquet (h@'{{ storage_uri }}/{{ name_prefix }};{{ key }}')
@@ -52,7 +113,10 @@ distributed=false
 <|
 {{ query }}
 "
-    args <- list(query = query, name_prefix = name_prefix,
-        storage_uri = storage_uri, key = key)
+    args <- list(
+        query = query, name_prefix = name_prefix,
+        storage_uri = storage_uri, key = key
+    )
     whisker::whisker.render(template, args)
 }
+# TODO: test this without key auth, using AAD token and impersonate
