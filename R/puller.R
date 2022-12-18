@@ -126,3 +126,25 @@ distributed=false
     )
     whisker::whisker.render(template, args)
 }
+
+#' Wrap a SQL query in a Kusto request
+wrap_sql_request <- function(query, sql_server, sql_database) {
+    conn_str <- glue::glue('Server={sql_server},1433;Authentication="Active Directory Integrated";Initial Catalog={sql_database};')
+    query <- gsub("[\r\n]", " ", query)
+    glue::glue("set notruncation; evaluate sql_request('{conn_str}', \"{query}\")")
+}
+
+query_kusto <- function(server_url, database, query) {
+    token <- get_cli_token(server_url)
+    endpoint <- AzureKusto::kusto_database_endpoint(
+        server = server_url,
+        database = database,
+        .query_token = token
+    )
+    AzureKusto::run_query(endpoint, query)
+}
+
+query_kusto_sql <- function(sql_server, sql_database, server, database, query) {
+    wrapped_query <- wrap_sql_request(query, sql_server, sql_database)
+    query_kusto(server, database, wrapped_query)
+}
