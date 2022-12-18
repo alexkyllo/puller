@@ -30,6 +30,7 @@ dataset.
 
   - [x] Log into Azure via the CLI
   - [ ] Export data to Azure Blob Storage from a Kusto query
+  - [ ] Collect export function to pipe an AzureKusto dbplyr query
   - [ ] Export data to Azure Blob Storage from a SQL query via Kusto
     using `sql_request()`
   - [ ] Export data to Azure Blob Storage from an Azure SQL database
