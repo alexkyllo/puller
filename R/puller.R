@@ -102,7 +102,6 @@ execute_cmd <- function(cmd) {
 #' @param storage_uri The URI of the blob storage container to export to
 #' @param key The account key for the storage container. Default "impersonate"
 #' uses the identity that is signed into Kusto to authenticate to Azure Storage.
-#' @export
 kusto_export_cmd <- function(query, name_prefix, storage_uri,
                              key = "impersonate") {
     template <- ".export
@@ -126,6 +125,28 @@ distributed=false
     )
     whisker::whisker.render(template, args)
 }
+
+#' Execute the Kusto query and export the result to Azure Storage.
+#' @export
+export.tbl_kusto <- function(tbl, name_prefix, storage_uri, key = "impersonate",
+                             ...) {
+    q <- AzureKusto::kql_build(tbl)
+    q_str <- kusto_export_cmd(
+        AzureKusto::kql_render(q), name_prefix,
+        storage_uri, key
+    )
+    params <- c(tbl$params, list(...))
+    params$database <- tbl$src
+    params$qry_cmd <- q_str
+    res <- do.call(AzureKusto::run_query, params)
+    tibble::as_tibble(res)
+}
+
+#' @export
+export <- function(object, ...) {
+    UseMethod("export")
+}
+.S3method("export", "tbl_kusto", export.tbl_kusto)
 
 #' Wrap a SQL query in a Kusto request
 wrap_sql_request <- function(query, sql_server, sql_database) {

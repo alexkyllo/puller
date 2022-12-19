@@ -16,4 +16,5 @@ Imports:
     AzureStor,
     jsonlite,
     lifecycle,
+    tibble,
     whisker

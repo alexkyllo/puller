@@ -5,7 +5,7 @@
 \title{Run a Kusto query and export results to Azure Storage in Parquet or CSV
 format.}
 \usage{
-kusto_export_cmd(query, name_prefix, storage_uri, key)
+kusto_export_cmd(query, name_prefix, storage_uri, key = "impersonate")
 }
 \arguments{
 \item{query}{The text of the Kusto query to run}
@@ -14,7 +14,8 @@ kusto_export_cmd(query, name_prefix, storage_uri, key)
 
 \item{storage_uri}{The URI of the blob storage container to export to}
 
-\item{key}{The account key for the storage container}
+\item{key}{The account key for the storage container. Default "impersonate"
+uses the identity that is signed into Kusto to authenticate to Azure Storage.}
 }
 \description{
 Run a Kusto query and export results to Azure Storage in Parquet or CSV
