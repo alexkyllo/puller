@@ -46,6 +46,23 @@ A subclass of AzureAuth::AzureToken R6 class for tokens from Azure CLI.
 )}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{resource}}{The URI of the Azure resource to which to authenticate.}
+
+\item{\code{tenant}}{The Azure Active Directory tenant name or GUID.}
+
+\item{\code{aad_host}}{The Azure Active Directory authority.}
+
+\item{\code{version}}{The Azure Active Directory API version (1 or 2)}
+
+\item{\code{use_cache}}{default TRUE. If TRUE, tokens will be cached for reuse.}
+
+\item{\code{token_args}}{pass through args to AzureAuth token constructor}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AzureTokenCLI-clone"></a>}}

@@ -155,8 +155,8 @@ distributed=false
 #' authenticate to Azure Storage. An Azure Storage account key.
 #' @param ... pass-through parameters to AzureKusto::run_query
 #' @export
-export.tbl_kusto <- function(tbl, name_prefix, storage_uri, key = "impersonate",
-                             ...) {
+export.tbl_kusto <- function(tbl, name_prefix, storage_uri,
+    key = "impersonate", ...) {
     # TODO: upstream this to the AzureKusto package
     q <- AzureKusto::kql_build(tbl)
     q_str <- kusto_export_cmd(
@@ -206,6 +206,12 @@ query_kusto_sql <- function(sql_server, sql_database, server, database, query) {
 AzureTokenCLI <- R6::R6Class("AzureTokenCLI", inherit = AzureAuth::AzureToken,
     # TODO: upstream this to the AzureAuth package.
     public = list(
+        #' @param resource The URI of the Azure resource to which to authenticate.
+        #' @param tenant The Azure Active Directory tenant name or GUID.
+        #' @param aad_host The Azure Active Directory authority.
+        #' @param version The Azure Active Directory API version (1 or 2)
+        #' @param use_cache default TRUE. If TRUE, tokens will be cached for reuse.
+        #' @param token_args pass through args to AzureAuth token constructor
         initialize = function(resource = NULL, tenant = NULL,
             aad_host = "https://login.microsoftonline.com/", version = 1,
             use_cache = NULL, token_args = list())
