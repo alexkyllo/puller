@@ -6,6 +6,18 @@
 \usage{
 \method{export}{tbl_kusto}(tbl, name_prefix, storage_uri, key = "impersonate", ...)
 }
+\arguments{
+\item{tbl}{An instance of AzureKusto::tbl_kusto}
+
+\item{name_prefix}{The filename prefix to use for exported files.}
+
+\item{storage_uri}{The Azure Storage URI to export files to.}
+
+\item{key}{default "impersonate" which uses the account signed into Kusto to
+authenticate to Azure Storage. An Azure Storage account key.}
+
+\item{...}{pass-through parameters to AzureKusto::run_query}
+}
 \description{
 Execute the Kusto query and export the result to Azure Storage.
 }

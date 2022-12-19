@@ -6,6 +6,12 @@
 \usage{
 az_login(tenant, use_device_code = FALSE)
 }
+\arguments{
+\item{tenant}{The Azure Active Directory tenant name or GUID.}
+
+\item{use_device_code}{default FALSe. Set to TRUE if you wish to use device
+code flow instead of interactive web sign-in flow.}
+}
 \description{
 Log into the Azure CLI by running the \verb{az login} command.
 }

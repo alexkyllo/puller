@@ -14,6 +14,7 @@ Config/testthat/edition: 3
 Imports: 
     AzureKusto,
     AzureStor,
+    glue,
     jsonlite,
     lifecycle,
     tibble,
