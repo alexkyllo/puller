@@ -130,6 +130,7 @@ distributed=false
 #' @export
 export.tbl_kusto <- function(tbl, name_prefix, storage_uri, key = "impersonate",
                              ...) {
+    # TODO: upstream this to the AzureKusto package
     q <- AzureKusto::kql_build(tbl)
     q_str <- kusto_export_cmd(
         AzureKusto::kql_render(q), name_prefix,
